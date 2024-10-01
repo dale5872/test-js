@@ -23,7 +23,11 @@ interface ITest1ComponentProps {
 }
 
 export const Test1Component = (props: ITest1ComponentProps) => {
-
+    return (
+        <span style={
+            { 'color': props.age >= 18 ? 'blue' : 'red'}
+        }>{props.name}</span>
+    );
 }
 
 
@@ -62,10 +66,17 @@ interface ITest2ComponentProps {
 }
 
 export const Test2Component = (props: ITest2ComponentProps) => {
+    const [age, setAge] = React.useState(0);
 
     useEffect(() => {
-    }, []);
-    
+        getAge(props.name).then((age) => setAge(age));
+    }, [props.name]);
+
+    return (
+        <span style={
+            { 'color': age >= 18 ? 'blue' : 'red'}
+        }>{props.name}</span>
+    );
 }
 
 

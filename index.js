@@ -12,7 +12,15 @@ const data = require("./data");
  */
 
  // Your code
-
+function printPlayers() {
+    const players = data.getPlayers();
+    players.forEach((player, idx) => {
+        console.log(`PLAYER ${idx + 1}`);
+        console.log(`NAME: ${player.name}`);
+        console.log(`LASTNAME: ${player.lastname}`);
+        console.log(`POSITION: ${player.position}`);
+    });
+}
 
 
 /**
@@ -21,10 +29,19 @@ const data = require("./data");
  */
 
 // Your code
+function printPlayerNameDescending() {
+    // Assuming that name references the players first and last names.
+    const players = data.getPlayers();
+    let playerNames = [];
 
+    for(const player of players) {
+        playerNames.push(`${player.name} ${player.lastname}`);
+    }
 
+    playerNames.sort((a, b) => a.length > b.length ? 1 : -1);
 
-
+    console.log(playerNames);
+}
 
 /**
  * Test 3
@@ -35,8 +52,24 @@ const data = require("./data");
  */
 
 // Your code
+function getAverageExpectedGoals() {
+    const players = data.getPlayers();
+    const numberOfPlayers = players.length;
+    let scoringChance = 0;
 
+    for(const player of players) {
+        if(typeof player.scoringChance === 'string') {
+            scoringChance += parseInt(player.scoringChance);
+            continue;
+        }
+        scoringChance += player.scoringChance;
+    }
+    // Assuming that player.scoringChance is a floating point number,
+    // each scoringChance will be divided by 10, and then averaged by the number of players
+    scoringChance /= 100;
 
+    console.log(`Goals per match: ${scoringChance}`);
+}
 
 /**
  * Test 4
@@ -44,8 +77,17 @@ const data = require("./data");
  */
 
 // Your code
+function getPlayerPosition(name) {
+    const players = data.getPlayers();
+    const player = players.find(player => player.name === name);
 
+    if(player === undefined) {
+        console.log(`Could not find player ${name}`);
+        return;
+    }
 
+    console.log(`${player.name} ${player.lastname}'s position is ${player.position}`);
+}
 
 /**
  * Test 5
@@ -57,3 +99,58 @@ const data = require("./data");
  */
 
 // Your code
+function getSimulatedResult() {
+    const players = data.getPlayers();
+    const teamA = {};
+    const teamB = {};
+
+    let playersPicked = 0;
+    while(playersPicked < players.length) {
+        const player = Math.floor(Math.random() * 10);
+        const pickedPlayer = players[player];
+
+        if(teamA[player] === undefined && teamB[player] === undefined) {
+            // Player not picked before
+            const xG = typeof pickedPlayer.scoringChance === 'string' ? parseInt(pickedPlayer.scoringChance) : pickedPlayer.scoringChance
+            if(playersPicked % 2 === 0) {
+                teamA[player] = xG;
+            } else {
+                teamB[player] = xG;
+            }
+            playersPicked++;
+        }
+    }
+
+    let teamAScore = 0;
+    let teamBScore = 0;
+
+    Object.values(teamA).forEach((scoringChance) => {teamAScore += scoringChance});
+    Object.values(teamB).forEach((scoringChance) => {teamBScore += scoringChance});
+
+    // Assuming that player.scoringChance is a floating point number,
+    // each scoringChance will be divided by 10, and then averaged by the number of players in the team
+    teamAScore = Math.round(teamAScore / 50);
+    teamBScore = Math.round(teamBScore / 50);
+
+    console.log(`Team A ${teamAScore}:${teamBScore} Team B`);
+}
+
+// Output
+console.log('Test 1 Output: \n');
+printPlayers();
+
+console.log('\nTest 2 Output: \n');
+printPlayerNameDescending();
+
+console.log('\nTest 3 Output: \n');
+getAverageExpectedGoals();
+
+console.log('\nTest 4 Output: \n');
+getPlayerPosition('Timo');
+getPlayerPosition('Lucas');
+getPlayerPosition('John');
+getPlayerPosition(0);
+getPlayerPosition(false);
+
+console.log('\nTest 5 Output: \n');
+getSimulatedResult();
