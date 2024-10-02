@@ -54,7 +54,6 @@ function printPlayerNameDescending() {
 // Your code
 function getAverageExpectedGoals() {
     const players = data.getPlayers();
-    const numberOfPlayers = players.length;
     let scoringChance = 0;
 
     for(const player of players) {
@@ -66,7 +65,7 @@ function getAverageExpectedGoals() {
     }
     // Assuming that player.scoringChance is a floating point number,
     // each scoringChance will be divided by 10, and then averaged by the number of players
-    scoringChance /= 100;
+    scoringChance = (scoringChance / 10) / players.length;
 
     console.log(`Goals per match: ${scoringChance}`);
 }
@@ -107,11 +106,11 @@ function getSimulatedResult() {
     let playersPicked = 0;
     while(playersPicked < players.length) {
         const player = Math.floor(Math.random() * 10);
-        const pickedPlayer = players[player];
+        const scoringChance = players[player].scoringChance;
 
         if(teamA[player] === undefined && teamB[player] === undefined) {
             // Player not picked before
-            const xG = typeof pickedPlayer.scoringChance === 'string' ? parseInt(pickedPlayer.scoringChance) : pickedPlayer.scoringChance
+            const xG = typeof scoringChance === 'string' ? parseInt(scoringChance) : scoringChance;
             if(playersPicked % 2 === 0) {
                 teamA[player] = xG;
             } else {
