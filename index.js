@@ -38,7 +38,7 @@ function printPlayerNameDescending() {
         playerNames.push(`${player.name} ${player.lastname}`);
     }
 
-    playerNames.sort((a, b) => a.length > b.length ? 1 : -1);
+    playerNames.sort((a, b) => a.length > b.length ? -1 : 1);
 
     console.log(playerNames);
 }
